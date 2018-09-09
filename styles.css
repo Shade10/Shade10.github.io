@@ -1,18 +1,81 @@
-body{
+/* body{
     top: 0;
-    margin: 0px 0px;
+} */
+
+html{
+    height: 100%;
+    overflow: hidden;
 }
-.container{
+body{
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    perspective: 2px;
+    transform-style: preserve-3d;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-family: "Luna";
+}
+
+header{
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding: 30vw 0 5vw;
+    position: relative;
+    transform-style: inherit;
+    width: 100vw;
+}
+
+header h1{
+    margin-top: -100px;
+}
+header, header:before{
+    background: 50% 50% / cover;
+}
+
+header::before{
+    bottom: 0;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: block;
+    background-image: url(img/programowanie-wszedzie.jpg);
+    background-size: cover;
+    transform-origin: center center 0;
+    transform: translateZ(-1px) scale(2);
+    z-index: -1;
+    min-height: 100vh;
+}
+header *{
+    font-weight: normal;
+    letter-spacing: 0.2em;
+    text-align: center;
+    margin: 0;
+    padding: 1em 0;
+}
+
+
+
+/* parallax  */
+
+
+
+
+/* dsdsdsdsdddddddddddddddddddddddddddddddddd */
+
+/* .container{
     display: block;
     top: 0;
     margin-top: 0;
-}
+} */
 
 #about{
     display: flex;
     top: 0%;
 }
-.header{
+.header-text{
     margin-top: 200px;
 }
 
@@ -40,6 +103,11 @@ body{
 }
 .nav{
     margin-top: 300px;
+    transform: translateX(0) translateZ(0);
+}
+.sticky{
+    position: fixed;
+    top: 0;
 }
 h1, h2, h3{
     display: block;
@@ -59,3 +127,7 @@ p{
     padding: 30px;
     
 }
+
+
+
+
