@@ -1,0 +1,51 @@
+.container{
+    display: block;
+    margin-top: 200px;
+}
+.display-header{
+    margin: 200px 0;
+}
+
+.text-center{
+    display: flex;
+    justify-content: center;
+}
+
+.sidenav{
+    background-color: #111;
+    width: 150px;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+}   
+.sidenav a{
+    display: block;
+    font-size: 1.5em;
+    margin-top: 10px;
+    text-align: center;
+    padding: 6px 8px 6px 13px;
+}
+.nav{
+    margin-top: 300px;
+}
+h1, h2, h3{
+    display: block;
+    text-align: center;
+} 
+
+p{
+    display: block;
+    text-align: center;
+    font-size: 1.1em
+}
+
+.meta{
+    width: 650px;
+    border-top: 1px solid blue;
+    margin: 10px auto;
+    padding: 30px;
+    
+}
