@@ -1,9 +1,19 @@
+body{
+    top: 0;
+    margin: 0px 0px;
+}
 .container{
     display: block;
-    margin-top: 200px;
+    top: 0;
+    margin-top: 0;
 }
-.display-header{
-    margin: 200px 0;
+
+#about{
+    display: flex;
+    top: 0%;
+}
+.header{
+    margin-top: 200px;
 }
 
 .text-center{
