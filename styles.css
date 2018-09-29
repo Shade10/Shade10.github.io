@@ -13,7 +13,7 @@ body{
     grid-gap: 10px;
     grid-template-areas: 
     "nav nav nav nav nav nav nav nav nav nav nav nav"
-    "aside aside section section section section header header header header header header"
+    "aside aside section section section section section section header header header header"
     "aside aside main main main main main main main main main main"
     "footer footer footer footer footer footer footer footer footer footer footer footer"; 
 }
@@ -56,35 +56,54 @@ nav a:visited{
 
 header{
     grid-area: header;
-    background-color: #3bbced;
+    background-color: #554947;
 }
 
 main{
     grid-area: main;
-    background-color: #3bbced;
+    background-color: #554947;
 }
 
 aside{
     grid-area: aside;
-    background-color: #3bbced;
+    background-color: #554947;
+    text-align: center
 }
+
+aside div{
+    border-bottom: 2px solid blue;
+}
+
 
 section{
     grid-area: section;
-    background-color: #3bbced;
+    background-color: #554947;
+}
+
+p.ballBlue{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-color: #3BC4E3  ; 
+    border-radius: 50%;
+    border-bottom: none;
+}
+
+p.ballBlack{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-color: #111516  ; 
+    border-radius: 50%;
 }
 
 footer{
     grid-area: footer;
-    background-color: #3bbced;
+    background-color: #554947;
 }
 
 
-
-
-
-
-@media screen and (max-width: 800px){
+@media screen and (max-width: 1200px){
     #container{
         display: grid;
         grid-template-columns: repeat(5, 1fr);
