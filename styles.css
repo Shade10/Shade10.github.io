@@ -18,9 +18,13 @@ body{
     background-color: #111516;
     grid-template-areas: 
     "nav nav nav nav nav nav nav nav nav nav nav nav"
-    "aside aside section section section section section section header header header header"
+    "aside aside section section section section header header header header header header"
     "aside aside main main main main main main main main main main"
     "footer footer footer footer footer footer footer footer footer footer footer footer"; 
+}
+
+p a{
+    color: #3bbced
 }
 
 #container > *{
@@ -87,8 +91,9 @@ aside{
     text-align: center
 }
 
-aside div{
+div{
     border-bottom: 2px solid blue;
+    border-width: 3px;
 }
 
 
