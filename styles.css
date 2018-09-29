@@ -1,36 +1,68 @@
-.container{
-    display: block;
-    margin-top: 200px;
-}
-.display-header{
-    margin: 200px 0;
+
+
+container{
+    width: 100%;
+    flex: 1 1 0;
+    max-width: 960px;
+    margin: 0 auto;
 }
 
-.text-center{
+nav{
+    background-color: #323;
+}
+
+nav ul{
+    list-style-type: none;
+    flex: 1;
+    padding: 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
 }
 
-.sidenav{
-    background-color: #111;
-    width: 150px;
-    height: 100%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    overflow-x: hidden;
-}   
-.sidenav a{
-    display: block;
-    font-size: 1.5em;
-    margin-top: 10px;
+nav a{
+    text-decoration: none;
     text-align: center;
-    padding: 6px 8px 6px 13px;
+    color: #f5f5f5;
+    display: block;
+    padding: 10px;
 }
-.nav{
-    margin-top: 300px;
+
+nav a:hover{
+    background-color: #555;
 }
+
+.boxes{
+    display: flex;
+    background: gray;
+}
+
+.box{
+    height: 100px;
+    min-width: 200px;
+    flex: 1
+}
+
+.boxOne{
+    background: red;
+}
+.boxTwo{
+    background: blue;
+}
+.boxThree{
+    background: green;
+}
+
+
+.content{
+    margin-top: 20px;
+    flex: 2 1 0;
+}
+
+.personalData{
+    flex: 1 1 0;
+}
+
+
 h1, h2, h3{
     display: block;
     text-align: center;
@@ -42,6 +74,13 @@ p{
     font-size: 1.1em
 }
 
+.meta-top{
+    width: 650px;
+    margin: 10px auto;
+    padding: 30px;
+    
+}
+
 .meta{
     width: 650px;
     border-top: 1px solid blue;
@@ -49,3 +88,5 @@ p{
     padding: 30px;
     
 }
+
+
