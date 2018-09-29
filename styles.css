@@ -13,7 +13,7 @@ body{
     display: grid;
     grid-template-columns: repeat(12, 1fr);
 	grid-auto-rows: minmax(60px, auto);
-    margin: 0 auto;
+    margin: 0 -8px;
     grid-gap: 12px;
     background-color: #111516;
     grid-template-areas: 
@@ -27,13 +27,30 @@ p a{
     color: #3bbced
 }
 
+h1{
+    margin-bottom: 60px;
+}
+
+p {
+    font-size: 22px;
+}
+
+p b {
+    font-size: 27px;
+}
+
+div{
+    border-bottom: 2px solid blue;
+    border-width: 3px;
+}
+
 #container > *{
     padding: 30px;
 }
 
 nav{
     grid-area: nav;
-    background-color: #111;
+    background-color: #0B191C  ;
     align-self: center;
     position: fixed;
     width: 100%
@@ -68,18 +85,6 @@ header{
     background-color: #554947;
 }
 
-header h1{
-    margin-bottom: 60px;
-}
-
-header p {
-    font-size: 22px;
-}
-
-header p b {
-    font-size: 27px;
-}
-
 main{
     grid-area: main;
     background-color: #554947;
@@ -91,10 +96,6 @@ aside{
     text-align: center
 }
 
-div{
-    border-bottom: 2px solid blue;
-    border-width: 3px;
-}
 
 
 section{
@@ -122,6 +123,11 @@ p.ballBlack{
 footer{
     grid-area: footer;
     background-color: #554947;
+    display: flex;
+    justify-content: space-around;
+}
+footer div{
+    margin-left: 20px;
 }
 
 
