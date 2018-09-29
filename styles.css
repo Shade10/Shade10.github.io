@@ -166,6 +166,10 @@ footer div{
     nav a{
         font-size: 1.4em;
     }
+
+    footer{
+        display: grid;
+    }
 }
 
 
@@ -178,7 +182,8 @@ footer div{
         grid-gap: 10px;
         grid-template-areas: 
         "nav nav nav nav nav"
-        "header header section section section"
+        "header header header header header" 
+        "section section section section section"
         "aside aside aside aside aside"
         "main main main main main"
         "footer footer footer footer footer"; 
@@ -202,6 +207,10 @@ footer div{
     }
     
     nav a{
-        font-size: 1.4em;
+        font-size: 1.1em;
+    }
+
+    footer{
+        display: grid;
     }
 }
