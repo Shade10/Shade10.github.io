@@ -1,61 +1,125 @@
+
+
 body{
-    top: 0;
-    margin: 0px 0px;
-}
-.container{
-    display: block;
-    top: 0;
-    margin-top: 0;
-}
-
-#about{
-    display: flex;
-    top: 0%;
-}
-.header{
-    margin-top: 200px;
-}
-
-.text-center{
-    display: flex;
-    justify-content: center;
-}
-
-.sidenav{
-    background-color: #111;
-    width: 150px;
-    height: 100%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    overflow-x: hidden;
-}   
-.sidenav a{
-    display: block;
-    font-size: 1.5em;
-    margin-top: 10px;
+    color: #fff;
     text-align: center;
-    padding: 6px 8px 6px 13px;
-}
-.nav{
-    margin-top: 300px;
-}
-h1, h2, h3{
-    display: block;
-    text-align: center;
-} 
-
-p{
-    display: block;
-    text-align: center;
-    font-size: 1.1em
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.meta{
-    width: 650px;
-    border-top: 1px solid blue;
-    margin: 10px auto;
+#container{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+	grid-auto-rows: minmax(60px, auto);
+    margin: 0 auto;
+    grid-gap: 10px;
+    grid-template-areas: 
+    "nav nav nav nav nav nav nav nav nav nav nav nav"
+    "aside aside section section section section header header header header header header"
+    "aside aside main main main main main main main main main main"
+    "footer footer footer footer footer footer footer footer footer footer footer footer"; 
+    /* position: relative; */
+
+}
+
+#container > *{
     padding: 30px;
+}
+
+nav{
+    grid-area: nav;
+    background-color: #111;
+    align-self: center;
+    position: fixed;
+    width: 100%
+}
+
+nav ul{
+    display: flex;
+    justify-content: space-around;
+}
+
+nav li{
+    list-style: none;
+}
+
+nav a{
+    font-size: 1.5em;
+}
+
+nav a:hover{
+    color: #3bbced;
+    border: 2px solid;
+}
+
+nav a:visited{
+    color: red;
+    border: 2px solid;
+}
+
+
+header{
+    grid-area: header;
+    background-color: #3bbced;
+}
+
+main{
+    grid-area: main;
+    background-color: #3bbced;
+}
+
+aside{
+    grid-area: aside;
+    background-color: #3bbced;
+}
+
+section{
+    grid-area: section;
+    background-color: #3bbced;
+}
+
+footer{
+    grid-area: footer;
+    background-color: #3bbced;
+}
+
+
+
+
+
+
+@media screen and (max-width: 800px){
+    #container{
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-auto-rows: minmax(10px, auto);
+        margin: 0 auto;
+        grid-gap: 10px;
+        grid-template-areas: 
+        "nav nav nav nav nav"
+        "header header section section section"
+        "aside aside aside aside aside"
+        "main main main main main"
+        "footer footer footer footer footer"; 
+    }
+
+    nav{
+        background-color: #111;
+        position: relative;
+
+    }
     
+    nav ul{
+        display: block;
+        list-style: disc;
+    }
+    
+    nav li{
+        margin-top: 30px;
+        list-style: disc;
+        list-style-position: inside;
+    }
+    
+    nav a{
+        font-size: 1.4em;
+    }
 }
