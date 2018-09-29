@@ -1,5 +1,4 @@
 
-
 body{
     color: #fff;
     text-align: center;
@@ -17,8 +16,6 @@ body{
     "aside aside section section section section header header header header header header"
     "aside aside main main main main main main main main main main"
     "footer footer footer footer footer footer footer footer footer footer footer footer"; 
-    /* position: relative; */
-
 }
 
 #container > *{
