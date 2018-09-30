@@ -117,6 +117,18 @@ main .lineBorder{
     grid-area: dataInfo;
 }
 
+main .mobile400{
+    display: none
+}
+
+main .mobile600{
+    display: none;
+}
+
+main .mobile800{
+    display: none;
+}
+
 main .mobile1020{
     display: none
 }
@@ -124,7 +136,6 @@ main .mobile1020{
 main .mobile1300{
     display: none;
 }
-
 .infoElements{
     grid-area: infoElements
 }
@@ -372,8 +383,18 @@ footer div{
         display: none;
     }
 
-    .mobile1020{
-        border-bottom: 3px solid blue; 
+    main .mobile1020{
+        display: none;
+    }
+
+    main .mobile1300{
+        display: none;
+    }
+
+
+    main .mobile800{
+        display: block;
+        border-bottom: 3px solid blue;
     }
    
     nav{
@@ -400,3 +421,53 @@ footer div{
         display: grid;
     }
 } 
+
+@media screen and (max-width: 615px){
+    .lineBorder{
+        display: none;
+    }
+
+    main .mobile600{
+        display: block;
+        border-bottom: 3px solid blue;
+    }
+
+    main .mobile800{
+        display: none;
+    }
+    
+    main .mobile1020{
+        display: none;
+    }
+
+    main .mobile1300{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .lineBorder{
+        display: none;
+    }
+
+    main .mobile400{
+        display: block;
+        border-bottom: 3px solid blue;
+    }
+
+    main .mobile600{
+        display: none;
+    }
+
+    main .mobile800{
+        display: none;
+    }
+    
+    main .mobile1020{
+        display: none;
+    }
+
+    main .mobile1300{
+        display: none;
+    }
+}
