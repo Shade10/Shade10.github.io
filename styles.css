@@ -171,7 +171,7 @@ footer div{
         display: grid;
         grid-template-columns: repeat(12, 1fr);
         grid-auto-rows: minmax(10px, auto);
-        margin: 0 auto;
+        margin: 0 -8;
         grid-gap: 10px;
         grid-template-areas: 
         "nav nav nav nav nav nav nav nav nav nav nav nav"
@@ -185,18 +185,17 @@ footer div{
 
     nav{
         background-color: #111;
-        position: relative;
-
+        position: fixed;
     }
     
     nav ul{
-        display: block;
+        display: flex;
         list-style: disc;
     }
     
     nav li{
-        margin-top: 30px;
-        list-style: disc;
+        top: 0;
+        margin-top: 5px;
         list-style-position: inside;
     }
     
@@ -213,8 +212,8 @@ footer div{
     #container{
         display: grid;
         grid-template-columns: repeat(8, 1fr);
-        grid-auto-rows: minmax(10px, auto);
-        margin: 0 auto;
+        grid-auto-rows: minmax(250px, auto);
+        margin: 0 -8px;
         grid-gap: 10px;
         grid-template-areas: 
         "nav nav nav nav nav nav nav nav"
@@ -225,13 +224,17 @@ footer div{
         "footer footer footer footer footer footer footer footer"; 
     }
 
+    nav{
+        position: absolute;
+    }
+    
     nav ul{
         display: block;
         list-style: disc;
     }
     
     nav li{
-        margin-top: 30px;
+        margin-top: 20px;
         list-style: disc;
         list-style-position: inside;
     }
@@ -250,8 +253,8 @@ footer div{
     #container{
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        grid-auto-rows: minmax(10px, auto);
-        margin: 0 auto;
+        grid-auto-rows: minmax(350px, auto);
+        margin: 0 -8px;
         grid-gap: 10px;
         grid-template-areas: 
         "nav nav nav nav nav"
@@ -265,7 +268,7 @@ footer div{
 
     nav{
         background-color: #111;
-        position: relative;
+        position: absolute;
     }
     
     nav ul{
@@ -274,13 +277,13 @@ footer div{
     }
     
     nav li{
-        margin-top: 30px;
+        margin-top: 32px;
         list-style: disc;
         list-style-position: inside;
     }
     
     nav a{
-        font-size: 1.1em;
+        font-size: 1.3em;
     }
 
     footer{
@@ -294,8 +297,8 @@ footer div{
     #container{
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        grid-auto-rows: minmax(10px, auto);
-        margin: 0 auto;
+        grid-auto-rows: minmax(330px, auto);
+        margin: 0 -8px;
         grid-gap: 10px;
         grid-template-areas: 
         "nav nav nav nav nav"
@@ -309,7 +312,6 @@ footer div{
 
     nav{
         background-color: #111;
-        position: relative;
     }
     
     nav ul{
@@ -324,7 +326,7 @@ footer div{
     }
     
     nav a{
-        font-size: 1.1em;
+        font-size: 1.4em;
     }
 
     footer{
