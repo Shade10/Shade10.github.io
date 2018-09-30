@@ -43,7 +43,7 @@ p b {
     font-size: 27px;
 }
 
-div{
+aside div{
     border-bottom: 2px solid blue;
     border-width: 3px;
 }
@@ -114,8 +114,8 @@ main p.lineBorder{
 .menuMore p.lineBorder{
     border-bottom: 3px solid blue;
     align-self: center;
-    margin-left: 13%;
-    width: 75%;
+    margin-left: 8%;
+    width: 85%;
 }
 
 aside{
