@@ -101,6 +101,10 @@ main div{
     border-bottom: none;
 }
 
+main h1:first-of-type{
+    margin-bottom: 0;
+}
+
 main p.lineBorder{
     border-bottom: 3px solid blue;
     padding: 15px 30px 45px 30px;
