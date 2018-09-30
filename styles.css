@@ -88,9 +88,38 @@ header{
     background-color: #554947;
 }
 
+header p{
+    padding: 28px 100px;
+}
+
 main{
     grid-area: main;
+    display: grid;
     background-color: #554947;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: minmax(80px, auto);
+    grid-gap: 12px;
+    grid-template-areas: 
+    "dataInfo infoElements infoElements infoElements infoElements"
+    "dataInfo infoElements infoElements infoElements infoElements"
+    
+}
+
+main div{
+    border-bottom: none;
+}
+
+main .lineBorder{
+    border-bottom: 3px solid blue;
+}
+
+.dataInfo{
+    grid-area: dataInfo;
+
+}
+
+.infoElements{
+    grid-area: infoElements
 }
 
 aside{
@@ -104,6 +133,10 @@ aside{
 section{
     grid-area: section;
     background-color: #554947;
+}
+
+section p{
+    padding: 7px;
 }
 
 p.ballBlue{
@@ -133,8 +166,50 @@ footer div{
     margin-left: 20px;
 }
 
+@media screen and (max-width: 1510px){
+    #container{
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: minmax(10px, auto);
+        margin: 0 auto;
+        grid-gap: 10px;
+        grid-template-areas: 
+        "nav nav nav nav nav nav nav nav nav nav nav nav"
+        "aside aside section section section section section header header header header header"
+        "aside aside main main main main main main main main main main"
+        "aside aside main main main main main main main main main main"
+        "aside aside main main main main main main main main main main"
+        "footer footer footer footer footer footer footer footer footer footer footer footer"; 
+    }
 
-@media screen and (max-width: 1200px){
+    nav{
+        background-color: #111;
+        position: relative;
+
+    }
+    
+    nav ul{
+        display: block;
+        list-style: disc;
+    }
+    
+    nav li{
+        margin-top: 30px;
+        list-style: disc;
+        list-style-position: inside;
+    }
+    
+    nav a{
+        font-size: 1.4em;
+    }
+
+    footer{
+        display: grid;
+    }
+}
+
+
+@media screen and (max-width: 1215px){
     #container{
         display: grid;
         grid-template-columns: repeat(5, 1fr);
