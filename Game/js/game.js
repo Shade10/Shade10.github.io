@@ -11,10 +11,12 @@ var PLAYER_CONFIG = {
     PLAYER_WIDTH: 20,
     PLAYER_HEIGHT: 20,
     PLAYER_MAX_SPEED: 400,
+    PLAYER_COOLDOWN: 0.8,
 }
 
 var LASER_CONFIG = {
-    LASER_MAX_SPEED: 500,
+    LASER_MAX_SPEED: 200,
+    LASER_COOLDOWN: 0,
 }
 
 var GAME_CONFIG = {
@@ -84,8 +86,15 @@ function updatePlayer(dataTime, container) {
     GAME_STATE.playerY = borderCollision(GAME_STATE.playerY, PLAYER_CONFIG.PLAYER_HEIGHT,
         GAME_CONFIG.GAME_HEIGHT - 30);
 
-    if (GAME_STATE.spacePressed) {
+    if (GAME_STATE.spacePressed && PLAYER_CONFIG.PLAYER_COOLDOWN <= 0) {
         createLaser(container, GAME_STATE.playerX, GAME_STATE.playerY);
+        console.log(PLAYER_CONFIG.PLAYER_COOLDOWN);
+        PLAYER_CONFIG.PLAYER_COOLDOWN = LASER_CONFIG.LASER_COOLDOWN;
+        console.log(PLAYER_CONFIG.PLAYER_COOLDOWN);
+    }
+
+    if (PLAYER_CONFIG.PLAYER_COOLDOWN > 0 ) {
+        PLAYER_CONFIG.PLAYER_COOLDOWN -= dataTime;  
     }
 
     var player = document.querySelector('.player');
@@ -93,16 +102,16 @@ function updatePlayer(dataTime, container) {
 }
 
 function createLaser(container, x, y) {
-    const element = document.createElement("img");
+    var element = document.createElement("img");
     element.src = "/Game/img/laser-blue-1.png";
     element.className = "laser";
 
     container.appendChild(element);
 
-    const laser = { element, x, y };
+    var laser = { element, x, y };
     GAME_STATE.lasers.push(laser);
 
-    const audio = new Audio("Game/sound/sfx-laser1.ogg");
+    var audio = new Audio("Game/sound/sfx-laser1.ogg");
     audio.play();
 
     setPosition(element, x, y);
@@ -111,16 +120,10 @@ function createLaser(container, x, y) {
 function updateLaser(dataTime, container) {
     var lasers = GAME_STATE.lasers;
 
-    // lasers.map(laser => {
-    //     laser -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
-    //     setPosition(laser.targ, laser.x, laser.y)
-    // })
-
-    for (let i = 0; i < lasers.length; i++) {
-        var laser = lasers[i];
+    lasers.map(laser => {
         laser.y -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
-        setPosition(laser.element, laser.x, laser.y);
-    }
+        setPosition(laser.element, laser.x, laser.y)
+    })
 }
 
 function renderGame() {
