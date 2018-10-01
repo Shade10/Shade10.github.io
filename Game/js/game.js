@@ -5,53 +5,95 @@ var GAME_CONTROL = {
     SPACE: 32,
 };
 
+var PLAYER_CONFIG = {
+    PLAYER_WIDTH: 20,
+}
+
 var GAME_CONFIG = {
     GAME_WIDTH: 800,
     GAME_HEIGHT: 600,
 };
 
 var GAME_STATE = {
-  playerX: 0,
-  playerY: 0
+    playerX: 0,
+    playerY: 0,
+    leftPressed: false,
+    rightPressed: false,
+    spacePressed: false,
 };
 
 function setPosition(el, x, y) {
-  el.style.transform = "translate(" + x + "px, " + y + "px)";
+    el.style.transform = "translate(" + x + "px, " + y + "px)";
 };
 
+function borderCollision(value, min, max) {
+    if (value < min) {
+        return min;
+    } else if (value > max) {
+        return max;
+    } else return value;
+}
+
 function createPlayer(container) {
-  GAME_STATE.playerX = GAME_CONFIG.GAME_WIDTH / 2;
-  GAME_STATE.playerY = GAME_CONFIG.GAME_HEIGHT - 50;
+    GAME_STATE.playerX = GAME_CONFIG.GAME_WIDTH / 2;
+    GAME_STATE.playerY = GAME_CONFIG.GAME_HEIGHT - 50;
 
-  var player = document.createElement("img");
-  player.src = "/Game/img/player-blue-1.png";
-  player.className = "player";
+    var player = document.createElement("img");
+    player.src = "/Game/img/player-blue-1.png";
+    player.className = "player";
 
-  container.appendChild(player);
-  
-  setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+    container.appendChild(player);
+
+    setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 };
 
 function init() {
-  var container = document.querySelector(".game");
-  createPlayer(container);
+    var container = document.querySelector(".game");
+    createPlayer(container);
 };
 init();
 
-function onkeydown(e){
-    if (e.keyCode === GAME_CONTROL.LEFT) {
-        GAME_STATE.playerX -= 5;
-        console.log(e.keyCode);
+function updatePlayer() {
+    if (GAME_STATE.leftPressed) {
+        GAME_STATE.playerX -= 50;
+    }
+    if (GAME_STATE.rightPressed) {
+        GAME_STATE.playerX += 50;
+    }
+    GAME_STATE.playerX = borderCollision(GAME_STATE.playerX, PLAYER_CONFIG.PLAYER_WIDTH,
+        GAME_CONFIG.GAME_WIDTH - PLAYER_CONFIG.PLAYER_WIDTH);
 
-        var player =document.querySelector('.player');
-        setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+    var player = document.querySelector('.player');
+    setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+}
+
+function renderGame() {
+    updatePlayer();
+    window.requestAnimationFrame(renderGame);
+}
+
+function keyDown(e) {
+    if (e.keyCode === GAME_CONTROL.LEFT) {
+        GAME_STATE.leftPressed = true;
+    } else if (e.keyCode === GAME_CONTROL.RIGHT) {
+        GAME_STATE.rightPressed = true;
+    } else if (e.keyCode === GAME_CONTROL.SPACE) {
+        GAME_STATE.spacePressed = true;
     }
-    if (e.keyCode === GAME_CONTROL.RIGHT) {
-        GAME_STATE.playerX += 5
-        var player =document.querySelector('.player');
-        setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
-    }
-    
+
 
 };
-window.addEventListener('keydown', onkeydown);
+
+function keyUp(e) {
+    if (e.keyCode === GAME_CONTROL.LEFT) {
+        GAME_STATE.leftPressed = false;
+    } else if (e.keyCode === GAME_CONTROL.RIGHT) {
+        GAME_STATE.rightPressed = false;
+    } else if (e.keyCode === GAME_CONTROL.SPACE) {
+        GAME_STATE.spacePressed = false;
+    }
+};
+
+window.addEventListener('keydown', keyDown);
+window.addEventListener('keyup', keyUp);
+window.requestAnimationFrame(renderGame);
