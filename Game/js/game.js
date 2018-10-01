@@ -7,6 +7,7 @@ var GAME_CONTROL = {
 
 var PLAYER_CONFIG = {
     PLAYER_WIDTH: 20,
+    PLAYER_MAX_SPEED: 400,
 }
 
 var GAME_CONFIG = {
@@ -15,6 +16,7 @@ var GAME_CONFIG = {
 };
 
 var GAME_STATE = {
+    lastTime: Date.now(),
     playerX: 0,
     playerY: 0,
     leftPressed: false,
@@ -53,12 +55,12 @@ function init() {
 };
 init();
 
-function updatePlayer() {
+function updatePlayer(dataTime) {
     if (GAME_STATE.leftPressed) {
-        GAME_STATE.playerX -= 50;
+        GAME_STATE.playerX -= dataTime * PLAYER_CONFIG.PLAYER_MAX_SPEED;
     }
     if (GAME_STATE.rightPressed) {
-        GAME_STATE.playerX += 50;
+        GAME_STATE.playerX += dataTime * PLAYER_CONFIG.PLAYER_MAX_SPEED ;
     }
     GAME_STATE.playerX = borderCollision(GAME_STATE.playerX, PLAYER_CONFIG.PLAYER_WIDTH,
         GAME_CONFIG.GAME_WIDTH - PLAYER_CONFIG.PLAYER_WIDTH);
@@ -68,7 +70,12 @@ function updatePlayer() {
 }
 
 function renderGame() {
-    updatePlayer();
+    var currentTime = Date.now();
+    var dataTime = (currentTime - GAME_STATE.lastTime) / 1000;
+    
+    updatePlayer(dataTime);
+    
+    GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
 }
 
