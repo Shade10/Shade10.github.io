@@ -11,12 +11,12 @@ var PLAYER_CONFIG = {
     PLAYER_WIDTH: 20,
     PLAYER_HEIGHT: 20,
     PLAYER_MAX_SPEED: 400,
-    PLAYER_COOLDOWN: 0.8,
+    PLAYER_COOLDOWN: 0,
 }
 
 var LASER_CONFIG = {
     LASER_MAX_SPEED: 200,
-    LASER_COOLDOWN: 0,
+    LASER_COOLDOWN: 0.5,
 }
 
 var GAME_CONFIG = {
@@ -117,13 +117,23 @@ function createLaser(container, x, y) {
     setPosition(element, x, y);
 }
 
+function destroyLaser(container, laser) {
+   container.removeChild(laser.element);
+   laser.isDead = true;
+}
+
 function updateLaser(dataTime, container) {
     var lasers = GAME_STATE.lasers;
-
+    
     lasers.map(laser => {
         laser.y -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
+        if(laser.y < 0){
+            destroyLaser(container, laser);
+        }
         setPosition(laser.element, laser.x, laser.y)
     })
+
+    GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
 
 function renderGame() {
