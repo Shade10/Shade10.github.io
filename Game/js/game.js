@@ -13,6 +13,10 @@ var PLAYER_CONFIG = {
     PLAYER_MAX_SPEED: 400,
 }
 
+var LASER_CONFIG = {
+    LASER_MAX_SPEED: 500,
+}
+
 var GAME_CONFIG = {
     GAME_WIDTH: 1200,
     GAME_HEIGHT: 700,
@@ -22,6 +26,7 @@ var GAME_STATE = {
     lastTime: Date.now(),
     playerX: 0,
     playerY: 0,
+    lasers: [],
     leftPressed: false,
     rightPressed: false,
     upPressed: false,
@@ -29,8 +34,8 @@ var GAME_STATE = {
     spacePressed: false,
 };
 
-function setPosition(el, x, y) {
-    el.style.transform = "translate(" + x + "px, " + y + "px)";
+function setPosition(targ, x, y) {
+    targ.style.transform = "translate(" + x + "px, " + y + "px)";
 };
 
 function borderCollision(value, min, max) {
@@ -46,7 +51,6 @@ function createPlayer(container) {
     GAME_STATE.playerY = GAME_CONFIG.GAME_HEIGHT - 50;
 
     var player = document.createElement("img");
-    // player.src = "/Game/img/player-blue-1.png";
     player.src = "/Game/img/spaceship.pod_.1.png";
     player.className = "player";
 
@@ -61,7 +65,7 @@ function init() {
 };
 init();
 
-function updatePlayer(dataTime) {
+function updatePlayer(dataTime, container) {
     if (GAME_STATE.leftPressed) {
         GAME_STATE.playerX -= dataTime * PLAYER_CONFIG.PLAYER_MAX_SPEED;
     }
@@ -80,15 +84,53 @@ function updatePlayer(dataTime) {
     GAME_STATE.playerY = borderCollision(GAME_STATE.playerY, PLAYER_CONFIG.PLAYER_HEIGHT,
         GAME_CONFIG.GAME_HEIGHT - 30);
 
+    if (GAME_STATE.spacePressed) {
+        createLaser(container, GAME_STATE.playerX, GAME_STATE.playerY);
+    }
+
     var player = document.querySelector('.player');
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+}
+
+function createLaser(container, x, y) {
+    const element = document.createElement("img");
+    element.src = "/Game/img/laser-blue-1.png";
+    element.className = "laser";
+
+    container.appendChild(element);
+
+    const laser = { element, x, y };
+    GAME_STATE.lasers.push(laser);
+
+    const audio = new Audio("Game/sound/sfx-laser1.ogg");
+    audio.play();
+
+    setPosition(element, x, y);
+}
+
+function updateLaser(dataTime, container) {
+    var lasers = GAME_STATE.lasers;
+
+    // lasers.map(laser => {
+    //     laser -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
+    //     setPosition(laser.targ, laser.x, laser.y)
+    // })
+
+    for (let i = 0; i < lasers.length; i++) {
+        var laser = lasers[i];
+        laser.y -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
+        setPosition(laser.element, laser.x, laser.y);
+    }
 }
 
 function renderGame() {
     var currentTime = Date.now();
     var dataTime = (currentTime - GAME_STATE.lastTime) / 1000;
+    var container = document.querySelector('.game');
 
-    updatePlayer(dataTime);
+    updatePlayer(dataTime, container);
+    updateLaser(dataTime, container);
+
 
     GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
@@ -106,8 +148,6 @@ function keyDown(e) {
     } else if (e.keyCode === GAME_CONTROL.SPACE) {
         GAME_STATE.spacePressed = true;
     }
-
-
 };
 
 function keyUp(e) {
