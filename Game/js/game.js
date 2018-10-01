@@ -14,9 +14,19 @@ var PLAYER_CONFIG = {
     PLAYER_COOLDOWN: 0,
 }
 
+var ENEMY_CONFIG = {
+    // ENEMY_WIDTH: 20,
+    // ENEMY_HEIGHT: 20,
+    // ENEMY_MAX_SPEED: 400,
+    ENEMY_PER_ROW: 10,
+    ENEMY_VERTICAL_PADDING: 70,
+    ENEMY_HORIZONTAL_PADDING: 80,
+    ENEMY_VERTICAL_SPACING: 80,
+}
+
 var LASER_CONFIG = {
     LASER_MAX_SPEED: 200,
-    LASER_COOLDOWN: 0.5,
+    LASER_COOLDOWN: 0.3,
 }
 
 var GAME_CONFIG = {
@@ -29,6 +39,7 @@ var GAME_STATE = {
     playerX: 0,
     playerY: 0,
     lasers: [],
+    eniemies: [], 
     leftPressed: false,
     rightPressed: false,
     upPressed: false,
@@ -61,9 +72,36 @@ function createPlayer(container) {
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 };
 
+function createEnemy(container, x, y){
+    var element = document.createElement('img');
+    element.src = "/Game/img/enemy-red-4.png";
+    element.className = "enemy";
+    container.appendChild(element);
+
+    var enemy = {
+        element,
+        x,
+        y,
+    };
+
+    GAME_STATE.eniemies.push(enemy);
+    setPosition(element, x, y);
+}
+
 function init() {
     var container = document.querySelector(".game");
     createPlayer(container);
+
+    var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) / 
+    (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
+
+    for(var i = 0; i < 3; i++){
+        var y = ENEMY_CONFIG.ENEMY_VERTICAL_PADDING + i * ENEMY_CONFIG.ENEMY_VERTICAL_SPACING;
+        for (var j = 0; j < ENEMY_CONFIG.ENEMY_PER_ROW; j++) {
+            var x = j * enemySpacing + ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING;
+            createEnemy(container, x, y);
+        }
+    }
 };
 init();
 
