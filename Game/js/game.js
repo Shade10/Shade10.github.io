@@ -72,37 +72,6 @@ function rectangleIntersection(r1, r2){
   );
 }
 
-function createPlayer(container) {
-    GAME_STATE.playerX = GAME_CONFIG.GAME_WIDTH / 2;
-    GAME_STATE.playerY = GAME_CONFIG.GAME_HEIGHT - 50;
-
-    var player = document.createElement("img");
-    player.src = "/Game/img/spaceship.pod_.1.png";
-    player.className = "player";
-
-    container.appendChild(player);
-
-    setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
-};
-
-function createEnemy(container, x, y) {
-    var element = document.createElement('img');
-    element.src = "/Game/img/enemy-red-4.png";
-    element.className = "enemy";
-    container.appendChild(element);
-
-    var enemy = {
-        element,
-        x,
-        y,
-        cooldown: Math.round(0.5, ENEMY_CONFIG.ENEMY_COOLDOWN),
-        element,
-    };
-
-    GAME_STATE.enemies.push(enemy);
-    setPosition(element, x, y);
-}
-
 function init() {
     var container = document.querySelector(".game");
     createPlayer(container);
@@ -119,6 +88,22 @@ function init() {
     }
 };
 init();
+
+// PLAYER
+
+function createPlayer(container) {
+    GAME_STATE.playerX = GAME_CONFIG.GAME_WIDTH / 2;
+    GAME_STATE.playerY = GAME_CONFIG.GAME_HEIGHT - 50;
+
+    var player = document.createElement("img");
+    player.src = "/Game/img/spaceship.pod_.1.png";
+    player.className = "player";
+
+    container.appendChild(player);
+
+    setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+};
+
 
 function updatePlayer(dataTime, container) {
     if (GAME_STATE.leftPressed) {
@@ -152,23 +137,7 @@ function updatePlayer(dataTime, container) {
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
 
-function updateEnemies(dataTime, container) {
-    var enemyDirectionX = Math.sin(GAME_STATE.lastTime / 1000.0) * 40;
-    var enemyDirectionY = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
-
-    var enemies = GAME_STATE.enemies;
-    enemies.map(enemy => {
-        var x = enemy.x + enemyDirectionX;
-        var y = enemy.y + enemyDirectionY;
-        setPosition(enemy.element, x, y);
-        enemy.cooldown -= dataTime;
-        if (ENEMY_CONFIG.ENEMY_COOLDOWN <= 0) {
-            createEnemyLaser(container, x, y);
-            enemy.cooldown = ENEMY_CONFIG.ENEMY_COOLDOWN;
-        }
-    })    
-    GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead )
-}
+// PLAYER LASERS
 
 function createLaser(container, x, y) {
     var element = document.createElement("img");
@@ -186,16 +155,11 @@ function createLaser(container, x, y) {
     setPosition(element, x, y);
 }
 
-
 function destroyLaser(container, laser) {
     container.removeChild(laser.element);
     laser.isDead = true;
 }
 
-function destroyEnemy(container, enemy){
-    container.removeChild(enemy.element);
-    enemy.isDead = true;
-}
 
 function updateLaser(dataTime, container) {
     var lasers = GAME_STATE.lasers;
@@ -227,6 +191,68 @@ function updateLaser(dataTime, container) {
     GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
 
+// ENEMY
+
+function createEnemy(container, x, y) {
+    var element = document.createElement('img');
+    element.src = "/Game/img/enemy-red-4.png";
+    element.className = "enemy";
+    container.appendChild(element);
+
+    var enemy = {
+        element,
+        x,
+        y,
+        cooldown: Math.round(0.5, ENEMY_CONFIG.ENEMY_COOLDOWN),
+        element,
+    };
+
+    GAME_STATE.enemies.push(enemy);
+    setPosition(element, x, y);
+}
+
+function destroyEnemy(container, enemy){
+    container.removeChild(enemy.element);
+    enemy.isDead = true;
+}
+
+function updateEnemies(dataTime, container) {
+    var enemyDirectionX = Math.sin(GAME_STATE.lastTime / 1000.0) * 40;
+    var enemyDirectionY = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
+
+    var enemies = GAME_STATE.enemies;
+    enemies.map(enemy => {
+        var x = enemy.x + enemyDirectionX;
+        var y = enemy.y + enemyDirectionY;
+        setPosition(enemy.element, x, y);
+        enemy.cooldown -= dataTime;
+        if (ENEMY_CONFIG.ENEMY_COOLDOWN <= 0) {
+            createEnemyLaser(container, x, y);
+            enemy.cooldown = ENEMY_CONFIG.ENEMY_COOLDOWN;
+        }
+    })    
+    GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead )
+}
+
+// ENEMY LASERS
+
+function createEnemyLaser(container, x ,y){
+    var element = document.createElement('img');
+    element.src = '/Game/img/laser-red-5.png';
+    element.className = 'enemy-laser';
+
+    container.appendChild(element);
+
+    var laser = {
+        element, x, y
+    };
+    GAME_STATE.enemyLasers.push(laser);
+    setPosition(laser, x ,y);
+}
+
+
+// RENDER GAME
+
 function renderGame() {
     var currentTime = Date.now();
     var dataTime = (currentTime - GAME_STATE.lastTime) / 1000;
@@ -240,6 +266,8 @@ function renderGame() {
     GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
 }
+
+// KEY HANDLER
 
 function keyDown(e) {
     if (e.keyCode === GAME_CONTROL.LEFT) {
