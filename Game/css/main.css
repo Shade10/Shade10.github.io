@@ -64,9 +64,18 @@ footer {
 
 .game .boss {
   position: absolute;
-  margin-left: -20px;
+  margin-left: -300px;
   margin-top: -18px;
-  width: 40px;
+  width: 300px;
+  height: 280px;
+}
+
+
+.game .bossHp {
+  width: 300px;
+  height: 20px;
+  background: #B00E0E;
+  margin-left: 455px;
 }
 
 .game .player {

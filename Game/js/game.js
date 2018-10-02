@@ -7,12 +7,24 @@ var GAME_CONTROL = {
     SPACE: 32,
 };
 
+var BOS_CONTROL = ['LEFT', 'RIGHT'];
+
 var PLAYER_CONFIG = {
     PLAYER_WIDTH: 20,
     PLAYER_HEIGHT: 20,
     PLAYER_MAX_SPEED: 400,
     PLAYER_COOLDOWN: 0,
 };
+
+var BOSS_CONFIG = {
+    BOSS_WIDTH: 300,
+    BOSS_HEIGHT: 280,
+    BOS_X: 0,
+    BOSS_Y: 0,
+    BOSS_HP: 100,
+    BOSS_MAX_SPEED: 200,
+    BOSS_COOLDOWN: 0,
+}
 
 var ENEMY_CONFIG = {
     // ENEMY_WIDTH: 20,
@@ -80,30 +92,6 @@ function rand(min, max) {
     return min + Math.random() * (max - min);
 }
 
-function init() {
-    var container = document.querySelector(".game");
-    createPlayer(container);
-
-    var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) /
-        (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
-
-    for (var i = 0; i < 3; i++) {
-        var y = ENEMY_CONFIG.ENEMY_VERTICAL_PADDING + i * ENEMY_CONFIG.ENEMY_VERTICAL_SPACING;
-
-        for (var j = 0; j < ENEMY_CONFIG.ENEMY_PER_ROW; j++) {
-            var x = j * enemySpacing + ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING;
-            createEnemy(container, x, y);
-        }
-    }
-};
-init();
-
-function playerWin() {
-    return GAME_STATE.enemies.length === 0;
-}
-
-// LEVEL BOSS
-
 // function init() {
 //     var container = document.querySelector(".game");
 //     createPlayer(container);
@@ -111,16 +99,30 @@ function playerWin() {
 //     var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) /
 //         (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
 
-//     for (var i = 0; i < 5; i++) {
+//     for (var i = 0; i < 3; i++) {
 //         var y = ENEMY_CONFIG.ENEMY_VERTICAL_PADDING + i * ENEMY_CONFIG.ENEMY_VERTICAL_SPACING;
+
 //         for (var j = 0; j < ENEMY_CONFIG.ENEMY_PER_ROW; j++) {
 //             var x = j * enemySpacing + ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING;
-//             createBos(container, x, y);
+//             createEnemy(container, x, y);
 //         }
 //     }
 // };
-
 // init();
+
+function playerWin() {
+    return GAME_STATE.enemies.length === 0;
+}
+
+// LEVEL BOSS
+
+function init() {
+    var container = document.querySelector(".game");
+    createPlayer(container);
+    createBos(container);
+};
+
+init();
 
 // PLAYER
 
@@ -234,41 +236,42 @@ function updateLaser(dataTime, container) {
 
 // ENEMY BOS
 
-// function createBos(container, x, y) {
-//     var element = document.createElement('img');
-//     element.src = "/Game/img/bos1.png";
-//     element.className = "boss";
-//     container.appendChild(element);
+function createBos(container) {
+    BOSS_CONFIG.BOS_X = GAME_CONFIG.GAME_WIDTH / 1.58;
+    BOSS_CONFIG.BOSS_Y = GAME_CONFIG.GAME_HEIGHT / 20;
 
-//     var boss = {
-//         element,
-//         x,
-//         y,
-//         cooldown: rand(0.1, 1),
-//         element,
-//     };
+    var bossHp = document.createElement('div');
+    bossHp.className = 'bossHp';
+    var boss = document.createElement('img');
+    boss.src = "/Game/img/boss1.png";
+    boss.className = "boss";
+    container.appendChild(bossHp);
+    container.appendChild(boss);
 
-//     GAME_STATE.bosses.push(boss);
-//     setPosition(element, x, y);
-// }
+    setPosition(boss, BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_Y);
+}
 
-// function updateEnemies(dataTime, container) {
-//     var bossDirectionX = Math.sin(GAME_STATE.lastTime / 1000.0) * 40;
-//     var bossDirectionY = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
+function destroyBoss(container, boss) {
+    if (BOSS_CONFIG.BOSS_HP <= 0) {
+        container.removeChild(boss);
+        GAME_STATE.playerWin = true;
+        break;
+    }
+}
 
-//     var bosses = GAME_STATE.bosses;
-//     bosses.map(boss => {
-//         var x = boss.x + bossDirectionX;
-//         var y = boss.y + bossDirectionY;
-//         setPosition(boss.element, x, y);
-//         boss.cooldown -= dataTime;
-//         if (ENEMY_CONFIG.ENEMY_COOLDOWN <= 0) {
-//             createEnemyLaser(container, x, y);
-//             boss.cooldown = ENEMY_CONFIG.ENEMY_COOLDOWN;
-//         }
-//     })
-//     GAME_STATE.bosses = GAME_STATE.bosses.filter(e => !e.isDead)
-// }
+function updateBoss(dataTime, container) {
+    if (GAME_STATE.leftPressed) {
+        BOSS_CONFIG.BOS_X -= dataTime * BOSS_CONFIG.BOSS_MAX_SPEED;
+    }
+    if (GAME_STATE.rightPressed) {
+        BOSS_CONFIG.BOS_X += dataTime * BOSS_CONFIG.BOSS_MAX_SPEED;
+    }
+    BOSS_CONFIG.BOS_X = borderCollision(BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_WIDTH,
+        GAME_CONFIG.GAME_WIDTH - (BOSS_CONFIG.BOSS_WIDTH - 300));
+
+    var boss = document.querySelector('.boss');
+    setPosition(boss, BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_Y);
+}
 
 // ENEMY
 
@@ -363,16 +366,18 @@ function renderGame() {
         return;
     }
 
-    if (playerWin()) {
-        document.querySelector(".congratulations").style.display = "block";
-        return;
-      }
+    // if (playerWin()) {
+    //     document.querySelector(".congratulations").style.display = "block";
+    //     return;
+    //   }
 
     var container = document.querySelector('.game');
+    var boss = document.querySelector('.boss');
     updatePlayer(dataTime, container);
     updateLaser(dataTime, container);
     updateEnemies(dataTime, container);
     updateEnemyLaser(dataTime, container);
+    updateBoss(dataTime, container);
 
     GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
@@ -407,6 +412,8 @@ function keyUp(e) {
         GAME_STATE.spacePressed = false;
     }
 };
+
+
 
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
