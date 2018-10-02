@@ -39,7 +39,7 @@ var GAME_STATE = {
     playerX: 0,
     playerY: 0,
     lasers: [],
-    eniemies: [],
+    enemies: [],
     leftPressed: false,
     rightPressed: false,
     upPressed: false,
@@ -63,11 +63,11 @@ function borderCollision(value, min, max) {
 
 function rectangleIntersection(r1, r2){
     return !(
-        r1.left > r2.right ||
-        r2.right < r1.left ||
-        r2.top > r1.bottom ||
-        r2.bottom < r1.top
-    );
+    r2.left > r1.right ||
+    r2.right < r1.left ||
+    r2.top > r1.bottom ||
+    r2.bottom < r1.top
+  );
 }
 
 function createPlayer(container) {
@@ -95,7 +95,7 @@ function createEnemy(container, x, y) {
         y,
     };
 
-    GAME_STATE.eniemies.push(enemy);
+    GAME_STATE.enemies.push(enemy);
     setPosition(element, x, y);
 }
 
@@ -149,16 +149,16 @@ function updatePlayer(dataTime, container) {
 }
 
 function updateEnemies(dataTime, container) {
-    var enemyDirectionX = Math.sin(GAME_STATE.lastTime / 1000.0) * 50;
+    var enemyDirectionX = Math.sin(GAME_STATE.lastTime / 1000.0) * 40;
     var enemyDirectionY = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
 
-    var enemies = GAME_STATE.eniemies;
+    var enemies = GAME_STATE.enemies;
     enemies.map(enemy => {
         var x = enemy.x + enemyDirectionX;
         var y = enemy.y + enemyDirectionY;
         setPosition(enemy.element, x, y);
     })    
-    GAME_STATE.eniemies = GAME_STATE.eniemies.filter(e => !e.isDead )
+    GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead )
 }
 
 function createLaser(container, x, y) {
@@ -201,11 +201,15 @@ function updateLaser(dataTime, container) {
         setPosition(laser.element, laser.x, laser.y);
         var r1 = laser.element.getBoundingClientRect();
         var enemies = GAME_STATE.enemies;
+
+        //użyć some array 
+        // https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Array/some
+        
         for (var j = 0; j < enemies.length; j++) {
-          var enemy = enemies[j];
-          if (enemy.isDead) return;
+          var enemy = GAME_STATE.enemies[j];
+          if (enemy.isDead || laser.isDead) continue;
           var r2 = enemy.element.getBoundingClientRect();
-          if (rectsIntersect(r1, r2)) {
+          if (rectangleIntersection(r1, r2)) {
             destroyEnemy(container, enemy);
             destroyLaser(container, laser);
             break;
