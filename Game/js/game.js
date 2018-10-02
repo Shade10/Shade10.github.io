@@ -191,25 +191,27 @@ function destroyEnemy(container, enemy){
 function updateLaser(dataTime, container) {
     var lasers = GAME_STATE.lasers;
 
-    lasers.map(laser => {
+    for (var i = 0; i < lasers.length; i++) {
+        var laser = lasers[i];
+        console.log(laser);
         laser.y -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
         if (laser.y < 0) {
-            destroyLaser(container, laser);
+          destroyLaser(container, laser);
         }
         setPosition(laser.element, laser.x, laser.y);
-        var r1 = laser.element.getBoundingReact();
+        var r1 = laser.element.getBoundingClientRect();
         var enemies = GAME_STATE.enemies;
-
-        enemies.map(enemy => {
-            if (enemy.isDead) continue;
-            var r2 = enemy.element.getBoundingReact();
-            if (rectangleIntersection(r1, r2)) {
-                destroyEnemy(container, enemy);
-                destroyLaser(container, laser);
-                break;
-            }    
-        })
-    })
+        for (var j = 0; j < enemies.length; j++) {
+          var enemy = enemies[j];
+          if (enemy.isDead) return;
+          var r2 = enemy.element.getBoundingClientRect();
+          if (rectsIntersect(r1, r2)) {
+            destroyEnemy(container, enemy);
+            destroyLaser(container, laser);
+            break;
+          }
+        }
+      }
     GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
 
