@@ -22,12 +22,12 @@ var ENEMY_CONFIG = {
     ENEMY_VERTICAL_PADDING: 40,
     ENEMY_HORIZONTAL_PADDING: 130,
     ENEMY_VERTICAL_SPACING: 60,
-    ENEMY_COOLDOWN: 3.0
+    ENEMY_COOLDOWN: 6.0
 };
 
 var LASER_CONFIG = {
-    LASER_MAX_SPEED: 260,
-    LASER_COOLDOWN: 0.3,
+    LASER_MAX_SPEED: 230,
+    LASER_COOLDOWN: 0.4,
 };
 
 var GAME_CONFIG = {
@@ -87,7 +87,7 @@ function init() {
     var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) /
         (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
 
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 3; i++) {
         var y = ENEMY_CONFIG.ENEMY_VERTICAL_PADDING + i * ENEMY_CONFIG.ENEMY_VERTICAL_SPACING;
 
         for (var j = 0; j < ENEMY_CONFIG.ENEMY_PER_ROW; j++) {
