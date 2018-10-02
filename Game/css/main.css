@@ -62,6 +62,13 @@ footer {
   width: 40px;
 }
 
+.game .boss {
+  position: absolute;
+  margin-left: -20px;
+  margin-top: -18px;
+  width: 40px;
+}
+
 .game .player {
   position: absolute;
   margin-left: -20px;
@@ -84,7 +91,7 @@ footer {
 .congratulations {
   display: none;
   position: absolute;
-  background: #c7a526;
+  background: #2CB3CF  ;
   color: white;
   padding: 20px 50px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -96,7 +103,7 @@ footer {
 .game-over {
   display: none;
   position: absolute;
-  background: #6b1818;
+  background: #B00E0E;
   color: white;
   padding: 20px 50px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
