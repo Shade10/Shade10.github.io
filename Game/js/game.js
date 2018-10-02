@@ -39,7 +39,7 @@ var GAME_STATE = {
     playerX: 0,
     playerY: 0,
     lasers: [],
-    eniemies: [], 
+    eniemies: [],
     leftPressed: false,
     rightPressed: false,
     upPressed: false,
@@ -59,6 +59,17 @@ function borderCollision(value, min, max) {
     } else return value;
 }
 
+// https://en.wikipedia.org/wiki/Hit-testing   for colision with laser
+
+function rectangleIntersection(r1, r2){
+    return !(
+        r1.left > r2.right ||
+        r2.right < r1.left ||
+        r2.top > r1.bottom ||
+        r2.bottom < r1.top
+    );
+}
+
 function createPlayer(container) {
     GAME_STATE.playerX = GAME_CONFIG.GAME_WIDTH / 2;
     GAME_STATE.playerY = GAME_CONFIG.GAME_HEIGHT - 50;
@@ -72,7 +83,7 @@ function createPlayer(container) {
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 };
 
-function createEnemy(container, x, y){
+function createEnemy(container, x, y) {
     var element = document.createElement('img');
     element.src = "/Game/img/enemy-red-4.png";
     element.className = "enemy";
@@ -92,10 +103,10 @@ function init() {
     var container = document.querySelector(".game");
     createPlayer(container);
 
-    var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) / 
-    (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
+    var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) /
+        (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
 
-    for(var i = 0; i < 3; i++){
+    for (var i = 0; i < 3; i++) {
         var y = ENEMY_CONFIG.ENEMY_VERTICAL_PADDING + i * ENEMY_CONFIG.ENEMY_VERTICAL_SPACING;
         for (var j = 0; j < ENEMY_CONFIG.ENEMY_PER_ROW; j++) {
             var x = j * enemySpacing + ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING;
@@ -126,17 +137,28 @@ function updatePlayer(dataTime, container) {
 
     if (GAME_STATE.spacePressed && PLAYER_CONFIG.PLAYER_COOLDOWN <= 0) {
         createLaser(container, GAME_STATE.playerX, GAME_STATE.playerY);
-        console.log(PLAYER_CONFIG.PLAYER_COOLDOWN);
         PLAYER_CONFIG.PLAYER_COOLDOWN = LASER_CONFIG.LASER_COOLDOWN;
-        console.log(PLAYER_CONFIG.PLAYER_COOLDOWN);
     }
 
-    if (PLAYER_CONFIG.PLAYER_COOLDOWN > 0 ) {
-        PLAYER_CONFIG.PLAYER_COOLDOWN -= dataTime;  
+    if (PLAYER_CONFIG.PLAYER_COOLDOWN > 0) {
+        PLAYER_CONFIG.PLAYER_COOLDOWN -= dataTime;
     }
 
     var player = document.querySelector('.player');
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
+}
+
+function updateEnemies(dataTime, container) {
+    var enemyDirectionX = Math.sin(GAME_STATE.lastTime / 1000.0) * 50;
+    var enemyDirectionY = Math.cos(GAME_STATE.lastTime / 1000.0) * 10;
+
+    var enemies = GAME_STATE.eniemies;
+    enemies.map(enemy => {
+        var x = enemy.x + enemyDirectionX;
+        var y = enemy.y + enemyDirectionY;
+        setPosition(enemy.element, x, y);
+    })    
+    GAME_STATE.eniemies = GAME_STATE.eniemies.filter(e => !e.isDead )
 }
 
 function createLaser(container, x, y) {
@@ -155,22 +177,39 @@ function createLaser(container, x, y) {
     setPosition(element, x, y);
 }
 
+
 function destroyLaser(container, laser) {
-   container.removeChild(laser.element);
-   laser.isDead = true;
+    container.removeChild(laser.element);
+    laser.isDead = true;
+}
+
+function destroyEnemy(container, enemy){
+    container.removeChild(enemy.element);
+    enemy.isDead = true;
 }
 
 function updateLaser(dataTime, container) {
     var lasers = GAME_STATE.lasers;
-    
+
     lasers.map(laser => {
         laser.y -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
-        if(laser.y < 0){
+        if (laser.y < 0) {
             destroyLaser(container, laser);
         }
-        setPosition(laser.element, laser.x, laser.y)
-    })
+        setPosition(laser.element, laser.x, laser.y);
+        var r1 = laser.element.getBoundingReact();
+        var enemies = GAME_STATE.enemies;
 
+        enemies.map(enemy => {
+            if (enemy.isDead) continue;
+            var r2 = enemy.element.getBoundingReact();
+            if (rectangleIntersection(r1, r2)) {
+                destroyEnemy(container, enemy);
+                destroyLaser(container, laser);
+                break;
+            }    
+        })
+    })
     GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
 
@@ -180,8 +219,9 @@ function renderGame() {
     var container = document.querySelector('.game');
 
     updatePlayer(dataTime, container);
+    //this work before (on the master):
     updateLaser(dataTime, container);
-
+    updateEnemies(dataTime, container);
 
     GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
