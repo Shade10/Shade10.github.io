@@ -76,6 +76,7 @@ footer {
   height: 20px;
   background: #B00E0E;
   margin-left: 455px;
+  text-align: center;
 }
 
 .game .player {
@@ -86,6 +87,12 @@ footer {
 }
 
 .game .laser {
+  position: absolute;
+  margin-left: -2.5px;
+  height: 30px;
+}
+
+.game .boss-laser {
   position: absolute;
   margin-left: -2.5px;
   height: 30px;

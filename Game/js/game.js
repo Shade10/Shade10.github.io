@@ -22,8 +22,10 @@ var BOSS_CONFIG = {
     BOS_X: 0,
     BOSS_Y: 0,
     BOSS_HP: 100,
-    BOSS_MAX_SPEED: 200,
-    BOSS_COOLDOWN: 0,
+    BOSS_MAX_SPEED: 350,
+    BOSS_COOLDOWN: 1.0,
+    BOSS_LASSER_MAX_SPEED: 400,
+    BOSS_LASER_COOLDOWN: 0.3,
 }
 
 var ENEMY_CONFIG = {
@@ -34,7 +36,7 @@ var ENEMY_CONFIG = {
     ENEMY_VERTICAL_PADDING: 40,
     ENEMY_HORIZONTAL_PADDING: 130,
     ENEMY_VERTICAL_SPACING: 60,
-    ENEMY_COOLDOWN: 6.0
+    ENEMY_COOLDOWN: 6.0,
 };
 
 var LASER_CONFIG = {
@@ -53,8 +55,9 @@ var GAME_STATE = {
     playerY: 0,
     lasers: [],
     enemies: [],
-    bosses: [],
     enemyLasers: [],
+    bosses: [],
+    bossLasers: [],
     leftPressed: false,
     rightPressed: false,
     upPressed: false,
@@ -111,15 +114,18 @@ function rand(min, max) {
 // init();
 
 function playerWin() {
-    return GAME_STATE.enemies.length === 0;
+    return GAME_STATE.enemies.length === 0 && GAME_STATE.bosses.length === 0;
 }
 
 // LEVEL BOSS
 
 function init() {
     var container = document.querySelector(".game");
+    BOSS_CONFIG.BOS_X = GAME_CONFIG.GAME_WIDTH / 1.58;
+    BOSS_CONFIG.BOSS_Y = GAME_CONFIG.GAME_HEIGHT - 640;
+
     createPlayer(container);
-    createBos(container);
+    createBoss(container, BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_Y);
 };
 
 init();
@@ -187,7 +193,11 @@ function createLaser(container, x, y) {
 
     container.appendChild(element);
 
-    var laser = { element, x, y };
+    var laser = {
+        element,
+        x,
+        y
+    };
     GAME_STATE.lasers.push(laser);
 
     var audio = new Audio("Game/sound/sfx-laser1.ogg");
@@ -216,9 +226,21 @@ function updateLaser(dataTime, container) {
         setPosition(laser.element, laser.x, laser.y);
         var r1 = laser.element.getBoundingClientRect();
         var enemies = GAME_STATE.enemies;
-
+        var bosses = GAME_STATE.bosses[0];
+        var rBoss = bosses.element.getBoundingClientRect();
+        var bossHP = document.querySelector('.bossHp');
         //użyć some array 
         // https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Array/some
+        console.log(BOSS_CONFIG.BOSS_HP);
+
+        if (rectangleIntersection(r1, rBoss )) {
+            BOSS_CONFIG.BOSS_HP -= 2;
+            bossHP.style.width -= 50 + 'px';
+            destroyLaser(container, laser);
+            if (BOSS_CONFIG.BOSS_HP <= 0) {
+                destroyBoss(container, bosses);
+            }
+        }
 
         for (var j = 0; j < enemies.length; j++) {
             var enemy = enemies[j];
@@ -236,41 +258,94 @@ function updateLaser(dataTime, container) {
 
 // ENEMY BOS
 
-function createBos(container) {
-    BOSS_CONFIG.BOS_X = GAME_CONFIG.GAME_WIDTH / 1.58;
-    BOSS_CONFIG.BOSS_Y = GAME_CONFIG.GAME_HEIGHT / 20;
 
+function createBoss(container, x, y) {
     var bossHp = document.createElement('div');
     bossHp.className = 'bossHp';
-    var boss = document.createElement('img');
-    boss.src = "/Game/img/boss1.png";
-    boss.className = "boss";
+    bossHp.innerText = 'Boss HP'
+    var element = document.createElement('img');
+    element.src = "/Game/img/boss1.png";
+    element.className = "boss";
     container.appendChild(bossHp);
-    container.appendChild(boss);
+    container.appendChild(element);
 
-    setPosition(boss, BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_Y);
+    var boss = {
+        element,
+        x,
+        y,
+        cooldown: rand(0.4, BOSS_CONFIG.BOSS_COOLDOWN),
+    };
+
+    GAME_STATE.bosses.push(boss);
+    setPosition(element, x, y);
 }
 
 function destroyBoss(container, boss) {
-    if (BOSS_CONFIG.BOSS_HP <= 0) {
-        container.removeChild(boss);
-        GAME_STATE.playerWin = true;
-        break;
-    }
+    container.removeChild(boss.element);
+    GAME_STATE.playerWin = true;
 }
 
 function updateBoss(dataTime, container) {
-    if (GAME_STATE.leftPressed) {
-        BOSS_CONFIG.BOS_X -= dataTime * BOSS_CONFIG.BOSS_MAX_SPEED;
-    }
-    if (GAME_STATE.rightPressed) {
-        BOSS_CONFIG.BOS_X += dataTime * BOSS_CONFIG.BOSS_MAX_SPEED;
-    }
-    BOSS_CONFIG.BOS_X = borderCollision(BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_WIDTH,
-        GAME_CONFIG.GAME_WIDTH - (BOSS_CONFIG.BOSS_WIDTH - 300));
+    var bossDirectionX = Math.sin(GAME_STATE.lastTime / 1000.0) * BOSS_CONFIG.BOSS_MAX_SPEED;
+    var bossDirectionY = Math.cos(GAME_STATE.lastTime / 1000.0) * 30;
 
-    var boss = document.querySelector('.boss');
-    setPosition(boss, BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_Y);
+    var bigBoss = GAME_STATE.bosses;
+    bigBoss.map(boss => {
+        var x = boss.x + bossDirectionX;
+        var y = boss.y + bossDirectionY;
+        setPosition(boss.element, x, y);
+        boss.cooldown -= dataTime;
+        if (boss.cooldown <= 0) {
+            createBossLaser(container, x, y);
+            boss.cooldown = BOSS_CONFIG.BOSS_COOLDOWN;
+        }
+    })
+    GAME_STATE.bosses = GAME_STATE.bosses.filter(e => !e.isDead)
+}
+
+// BOS LASER
+
+function createBossLaser(container, x, y) {
+    var element = document.createElement('img');
+    element.src = '/Game/img/laser-red-8.png';
+    element.className = 'boss-laser';
+
+    container.appendChild(element);
+
+    var laser = {
+        element,
+        x,
+        y
+    };
+    GAME_STATE.bossLasers.push(laser);
+
+    var audio = new Audio("Game/sound/sfx-laser1.ogg");
+    audio.play();
+    setPosition(element, x, y);
+}
+
+function updateBossLaser(dataTime, container) {
+    const lasers = GAME_STATE.bossLasers;
+
+    for (var i = 0; i < lasers.length; i++) {
+        var laser = lasers[i];
+        laser.y += dataTime * BOSS_CONFIG.BOSS_LASSER_MAX_SPEED;
+
+        if (laser.y > GAME_CONFIG.GAME_HEIGHT) {
+            destroyLaser(container, laser);
+        }
+
+        setPosition(laser.element, laser.x, laser.y);
+        const r1 = laser.element.getBoundingClientRect();
+        const player = document.querySelector(".player");
+        const r2 = player.getBoundingClientRect();
+        if (rectangleIntersection(r1, r2)) {
+            destroyPlayer(container, player);
+            destroyLaser(container, laser)
+            break;
+        }
+    }
+    GAME_STATE.bossLasers = GAME_STATE.bossLasers.filter(e => !e.isDead);
 }
 
 // ENEMY
@@ -286,7 +361,6 @@ function createEnemy(container, x, y) {
         x,
         y,
         cooldown: rand(0.4, ENEMY_CONFIG.ENEMY_COOLDOWN),
-        element,
     };
 
     GAME_STATE.enemies.push(enemy);
@@ -366,18 +440,19 @@ function renderGame() {
         return;
     }
 
-    // if (playerWin()) {
-    //     document.querySelector(".congratulations").style.display = "block";
-    //     return;
-    //   }
+    if (playerWin()) {
+        document.querySelector(".congratulations").style.display = "block";
+        return;
+      }
 
     var container = document.querySelector('.game');
     var boss = document.querySelector('.boss');
     updatePlayer(dataTime, container);
     updateLaser(dataTime, container);
-    updateEnemies(dataTime, container);
-    updateEnemyLaser(dataTime, container);
     updateBoss(dataTime, container);
+    updateBossLaser(dataTime, container);
+    // updateEnemies(dataTime, container);
+    // updateEnemyLaser(dataTime, container);
 
     GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
