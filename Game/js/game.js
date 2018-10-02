@@ -22,10 +22,11 @@ var ENEMY_CONFIG = {
     ENEMY_VERTICAL_PADDING: 70,
     ENEMY_HORIZONTAL_PADDING: 80,
     ENEMY_VERTICAL_SPACING: 80,
+    ENEMY_COOLDOWN: 3.0
 }
 
 var LASER_CONFIG = {
-    LASER_MAX_SPEED: 200,
+    LASER_MAX_SPEED: 260,
     LASER_COOLDOWN: 0.3,
 }
 
@@ -40,6 +41,7 @@ var GAME_STATE = {
     playerY: 0,
     lasers: [],
     enemies: [],
+    enemyLasers: [],
     leftPressed: false,
     rightPressed: false,
     upPressed: false,
@@ -93,6 +95,8 @@ function createEnemy(container, x, y) {
         element,
         x,
         y,
+        cooldown: Math.round(0.5, ENEMY_CONFIG.ENEMY_COOLDOWN),
+        element,
     };
 
     GAME_STATE.enemies.push(enemy);
@@ -157,6 +161,11 @@ function updateEnemies(dataTime, container) {
         var x = enemy.x + enemyDirectionX;
         var y = enemy.y + enemyDirectionY;
         setPosition(enemy.element, x, y);
+        enemy.cooldown -= dataTime;
+        if (ENEMY_CONFIG.ENEMY_COOLDOWN <= 0) {
+            createEnemyLaser(container, x, y);
+            enemy.cooldown = ENEMY_CONFIG.ENEMY_COOLDOWN;
+        }
     })    
     GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead )
 }
@@ -193,7 +202,6 @@ function updateLaser(dataTime, container) {
 
     for (var i = 0; i < lasers.length; i++) {
         var laser = lasers[i];
-        console.log(laser);
         laser.y -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
         if (laser.y < 0) {
           destroyLaser(container, laser);
