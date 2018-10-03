@@ -43,8 +43,6 @@ var ENEMY_CONFIG = {
     ENEMY_LASER_COOLDOWN: 0.4,
 };
 
-
-
 var GAME_CONFIG = {
     GAME_WIDTH: 1200,
     GAME_HEIGHT: 700,
@@ -113,18 +111,18 @@ function init() {
             createEnemy(container, x, y);
         }
     }
+
 };
 init();
 
+setTimeout(function(){
+    if (GAME_STATE.initBoss === true) {
+        initBoss
+    }
+}, 500)
 function playerWin() {
-    if (GAME_STATE.enemies.length <= 0) {
-        GAME_STATE.initBoss = true;
-        initBoss();
-        GAME_STATE.initBoss = false;
-    } 
-    return BOSS_CONFIG.BOSS_HP <= 0;
+    return BOSS_CONFIG.bossHP === 0
 }
-
 // LEVEL BOSS
 
 function initBoss() {
@@ -136,6 +134,11 @@ function initBoss() {
     createBoss(container, BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_Y);
 };
 
+// async function bossCall(){
+//     if (GAME_STATE.initBoss === true) {
+//         return initBoss();
+//     }
+// }
 
 // PLAYER
 
@@ -190,7 +193,6 @@ function updatePlayer(dataTime, container) {
     var player = document.querySelector('.player');
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
-
 // PLAYER LASERS
 
 function createLaser(container, x, y) {
@@ -212,7 +214,6 @@ function createLaser(container, x, y) {
 
     setPosition(element, x, y);
 }
-
 // MAIN DESTRUCTOR OF LASERS FOR EVERY-ONE
 
 function destroyLaser(container, laser) {
@@ -251,7 +252,6 @@ function updateLaser(dataTime, container) {
         }    
         //użyć some array 
         // https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Array/some
-        console.log(BOSS_CONFIG.BOSS_HP);
 
         for (var j = 0; j < enemies.length; j++) {
             var enemy = enemies[j];
@@ -266,9 +266,7 @@ function updateLaser(dataTime, container) {
     }
     GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
-
 // ENEMY BOS
-
 
 function createBoss(container, x, y) {
     var bossHp = document.createElement('div');
@@ -315,7 +313,6 @@ function updateBoss(dataTime, container) {
     })
     GAME_STATE.bosses = GAME_STATE.bosses.filter(e => !e.isDead)
 }
-
 // BOS LASER
 
 function createBossLaser(container, x, y) {
@@ -362,7 +359,6 @@ function updateBossLaser(dataTime, container) {
     }
     GAME_STATE.bossLasers = GAME_STATE.bossLasers.filter(e => !e.isDead);
 }
-
 // ENEMY
 
 function createEnemy(container, x, y) {
@@ -377,7 +373,6 @@ function createEnemy(container, x, y) {
         y,
         cooldown: rand(0.4, ENEMY_CONFIG.ENEMY_COOLDOWN),
     };
-
     GAME_STATE.enemies.push(enemy);
     setPosition(element, x, y);
 }
@@ -404,7 +399,6 @@ function updateEnemies(dataTime, container) {
     })
     GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead)
 }
-
 // ENEMY LASERS
 
 function createEnemyLaser(container, x, y) {
@@ -442,8 +436,6 @@ function updateEnemyLaser(dataTime, container) {
     }
     GAME_STATE.enemyLasers = GAME_STATE.enemyLasers.filter(e => !e.isDead);
 }
-
-
 // RENDER GAME
 
 function renderGame() {
@@ -454,12 +446,10 @@ function renderGame() {
         document.querySelector('.game-over').style.display = 'block';
         return;
     }
-
     if (playerWin()) {
         document.querySelector(".congratulations").style.display = "block";
         return;
     }
-
     var container = document.querySelector('.game');
     var boss = document.querySelector('.boss');
     updatePlayer(dataTime, container);
@@ -472,7 +462,6 @@ function renderGame() {
     GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
 }
-
 // KEY HANDLER
 
 function keyDown(e) {
@@ -502,8 +491,6 @@ function keyUp(e) {
         GAME_STATE.spacePressed = false;
     }
 };
-
-
 
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
