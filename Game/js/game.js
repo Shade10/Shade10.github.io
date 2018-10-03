@@ -266,6 +266,7 @@ function updateLaser(dataTime, container) {
 function createBoss(container, x, y) {
     var bossHp = document.createElement('div');
     bossHp.classList.add('bossHp');
+    bossHp.innerText = 'Boss HP ' + BOSS_CONFIG.BOSS_HP;
     var element = document.createElement('img');
     element.src = "/Game/img/boss1.png";
     element.className = "boss";
