@@ -14,6 +14,8 @@ var PLAYER_CONFIG = {
     PLAYER_HEIGHT: 20,
     PLAYER_MAX_SPEED: 400,
     PLAYER_COOLDOWN: 0,
+    PLAYER_LASER_MAX_SPEED: 230,
+    PLAYER_COOLDOWN: 0.4,
 };
 
 var BOSS_CONFIG = {
@@ -37,11 +39,8 @@ var ENEMY_CONFIG = {
     ENEMY_HORIZONTAL_PADDING: 130,
     ENEMY_VERTICAL_SPACING: 60,
     ENEMY_COOLDOWN: 6.0,
-};
-
-var LASER_CONFIG = {
-    LASER_MAX_SPEED: 230,
-    LASER_COOLDOWN: 0.4,
+    ENEMY_LASER_MAX_SPEED: 230,
+    ENEMY_LASER_COOLDOWN: 0.4,
 };
 
 var GAME_CONFIG = {
@@ -64,7 +63,9 @@ var GAME_STATE = {
     downPressed: false,
     spacePressed: false,
     initBoss: false,
+    BossOnMap: false,
     gameOver: false,
+    playerWin: false,
 };
 
 function setPosition(targ, x, y) {
@@ -78,7 +79,6 @@ function borderCollision(value, min, max) {
         return max;
     } else return value;
 }
-
 // https://en.wikipedia.org/wiki/Hit-testing   for colision with laser
 
 function rectangleIntersection(r1, r2) {
@@ -111,17 +111,21 @@ function init() {
             createEnemy(container, x, y);
         }
     }
+
 };
 init();
 
 function playerWin() {
-    if (GAME_STATE.enemies.length <= 0) {
-        initBoss();
-        GAME_STATE.initBoss = true;
-    } 
-    return BOSS_CONFIG.BOSS_HP <= 0;
+    if (GAME_STATE.playerWin === true ) {
+        return true;
+    }
 }
-
+function doItOnce() {
+    initBoss();
+    GAME_STATE.BossOnMap = true;
+    init = () => { };
+    doItOnce = () => { };
+}
 // LEVEL BOSS
 
 function initBoss() {
@@ -129,11 +133,8 @@ function initBoss() {
     BOSS_CONFIG.BOS_X = GAME_CONFIG.GAME_WIDTH / 1.58;
     BOSS_CONFIG.BOSS_Y = GAME_CONFIG.GAME_HEIGHT - 640;
 
-    createPlayer(container);
     createBoss(container, BOSS_CONFIG.BOS_X, BOSS_CONFIG.BOSS_Y);
 };
-
-
 // PLAYER
 
 function createPlayer(container) {
@@ -177,7 +178,7 @@ function updatePlayer(dataTime, container) {
 
     if (GAME_STATE.spacePressed && PLAYER_CONFIG.PLAYER_COOLDOWN <= 0) {
         createLaser(container, GAME_STATE.playerX, GAME_STATE.playerY);
-        PLAYER_CONFIG.PLAYER_COOLDOWN = LASER_CONFIG.LASER_COOLDOWN;
+        PLAYER_CONFIG.PLAYER_COOLDOWN = PLAYER_CONFIG.PLAYER_COOLDOWN;
     }
 
     if (PLAYER_CONFIG.PLAYER_COOLDOWN > 0) {
@@ -187,7 +188,6 @@ function updatePlayer(dataTime, container) {
     var player = document.querySelector('.player');
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
 }
-
 // PLAYER LASERS
 
 function createLaser(container, x, y) {
@@ -209,7 +209,6 @@ function createLaser(container, x, y) {
 
     setPosition(element, x, y);
 }
-
 // MAIN DESTRUCTOR OF LASERS FOR EVERY-ONE
 
 function destroyLaser(container, laser) {
@@ -220,11 +219,11 @@ function destroyLaser(container, laser) {
 
 function updateLaser(dataTime, container) {
     var lasers = GAME_STATE.lasers;
-    
+
     for (var i = 0; i < lasers.length; i++) {
         var laser = lasers[i];
-        laser.y -= dataTime * LASER_CONFIG.LASER_MAX_SPEED;
-        
+        laser.y -= dataTime * PLAYER_CONFIG.PLAYER_LASER_MAX_SPEED;
+
         if (laser.y < 0) {
             destroyLaser(container, laser);
         }
@@ -232,11 +231,11 @@ function updateLaser(dataTime, container) {
         var r1 = laser.element.getBoundingClientRect();
         var enemies = GAME_STATE.enemies;
 
-        if (GAME_STATE.initBoss === true) {
+        if (GAME_STATE.BossOnMap === true) {
             var bosses = GAME_STATE.bosses[0];
             var rBoss = bosses.element.getBoundingClientRect();
             var bossHP = document.querySelector('.bossHp');
-            
+
             if (rectangleIntersection(r1, rBoss)) {
                 BOSS_CONFIG.BOSS_HP -= 1;
                 bossHP.style.width -= (parseInt(bossHP.style.width) - 100) + 'px';
@@ -245,10 +244,9 @@ function updateLaser(dataTime, container) {
                     destroyBoss(container, bosses);
                 }
             }
-        }    
+        }
         //użyć some array 
         // https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Array/some
-        console.log(BOSS_CONFIG.BOSS_HP);
 
         for (var j = 0; j < enemies.length; j++) {
             var enemy = enemies[j];
@@ -263,9 +261,7 @@ function updateLaser(dataTime, container) {
     }
     GAME_STATE.lasers = GAME_STATE.lasers.filter(e => !e.isDead);
 }
-
 // ENEMY BOS
-
 
 function createBoss(container, x, y) {
     var bossHp = document.createElement('div');
@@ -290,8 +286,8 @@ function createBoss(container, x, y) {
 
 function destroyBoss(container, boss) {
     container.removeChild(boss.element);
+    GAME_STATE.BossOnMap = false;
     GAME_STATE.playerWin = true;
-    GAME_STATE.initBoss = false;
 }
 
 function updateBoss(dataTime, container) {
@@ -304,14 +300,13 @@ function updateBoss(dataTime, container) {
         var y = boss.y + bossDirectionY;
         setPosition(boss.element, x, y);
         boss.cooldown -= dataTime;
-        if (boss.cooldown <= 0) {
+        if (boss.cooldown <= 0 && GAME_STATE.BossOnMap === true) {
             createBossLaser(container, x, y);
             boss.cooldown = BOSS_CONFIG.BOSS_COOLDOWN;
         }
     })
     GAME_STATE.bosses = GAME_STATE.bosses.filter(e => !e.isDead)
 }
-
 // BOS LASER
 
 function createBossLaser(container, x, y) {
@@ -358,7 +353,6 @@ function updateBossLaser(dataTime, container) {
     }
     GAME_STATE.bossLasers = GAME_STATE.bossLasers.filter(e => !e.isDead);
 }
-
 // ENEMY
 
 function createEnemy(container, x, y) {
@@ -373,7 +367,6 @@ function createEnemy(container, x, y) {
         y,
         cooldown: rand(0.4, ENEMY_CONFIG.ENEMY_COOLDOWN),
     };
-
     GAME_STATE.enemies.push(enemy);
     setPosition(element, x, y);
 }
@@ -400,7 +393,6 @@ function updateEnemies(dataTime, container) {
     })
     GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead)
 }
-
 // ENEMY LASERS
 
 function createEnemyLaser(container, x, y) {
@@ -416,6 +408,10 @@ function createEnemyLaser(container, x, y) {
         y
     };
     GAME_STATE.enemyLasers.push(laser);
+    
+    var audio = new Audio("Game/sound/sfx-laser1.ogg");
+    audio.play();
+    
     setPosition(element, x, y);
 }
 
@@ -423,7 +419,7 @@ function updateEnemyLaser(dataTime, container) {
     var lasers = GAME_STATE.enemyLasers;
     for (var i = 0; i < lasers.length; i++) {
         var laser = lasers[i];
-        laser.y += dataTime * LASER_CONFIG.LASER_MAX_SPEED;
+        laser.y += dataTime * ENEMY_CONFIG.ENEMY_LASER_MAX_SPEED;
         if (laser.y > GAME_CONFIG.GAME_HEIGHT) {
             destroyLaser(container, laser);
         }
@@ -438,8 +434,6 @@ function updateEnemyLaser(dataTime, container) {
     }
     GAME_STATE.enemyLasers = GAME_STATE.enemyLasers.filter(e => !e.isDead);
 }
-
-
 // RENDER GAME
 
 function renderGame() {
@@ -450,14 +444,11 @@ function renderGame() {
         document.querySelector('.game-over').style.display = 'block';
         return;
     }
-
     if (playerWin()) {
         document.querySelector(".congratulations").style.display = "block";
         return;
     }
-
     var container = document.querySelector('.game');
-    var boss = document.querySelector('.boss');
     updatePlayer(dataTime, container);
     updateLaser(dataTime, container);
     updateBoss(dataTime, container);
@@ -465,10 +456,13 @@ function renderGame() {
     updateEnemies(dataTime, container);
     updateEnemyLaser(dataTime, container);
 
+    if (GAME_STATE.enemies <= 0) {
+        doItOnce();
+    }
+
     GAME_STATE.lastTime = currentTime;
     window.requestAnimationFrame(renderGame);
 }
-
 // KEY HANDLER
 
 function keyDown(e) {
@@ -498,8 +492,6 @@ function keyUp(e) {
         GAME_STATE.spacePressed = false;
     }
 };
-
-
 
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
