@@ -23,9 +23,9 @@ var BOSS_CONFIG = {
     BOSS_Y: 0,
     BOSS_HP: 100,
     BOSS_MAX_SPEED: 350,
-    BOSS_COOLDOWN: 1.0,
-    BOSS_LASSER_MAX_SPEED: 400,
-    BOSS_LASER_COOLDOWN: 0.3,
+    BOSS_COOLDOWN: 0.44,
+    BOSS_LASSER_MAX_SPEED: 600,
+    BOSS_LASER_COOLDOWN: 0.2,
 }
 
 var ENEMY_CONFIG = {
@@ -233,12 +233,18 @@ function updateLaser(dataTime, container) {
         // https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Array/some
         console.log(BOSS_CONFIG.BOSS_HP);
 
-        if (rectangleIntersection(r1, rBoss )) {
-            BOSS_CONFIG.BOSS_HP -= 2;
-            bossHP.style.width -= 50 + 'px';
+        var bossHpBar = bossHP.style.width;
+        console.log(bossHpBar);
+
+        if (rectangleIntersection(r1, rBoss)) {
+            BOSS_CONFIG.BOSS_HP -= 20;
+            bossHP.style.width -= (parseInt(bossHP.style.width) - 100) + 'px';
+            console.log(bossHP);
+            console.log(bossHP.style.width);
             destroyLaser(container, laser);
-            if (BOSS_CONFIG.BOSS_HP <= 0) {
+            if (BOSS_CONFIG.BOSS_HP < 1) {
                 destroyBoss(container, bosses);
+                destroyLaser(container, laser);
             }
         }
 
@@ -325,7 +331,9 @@ function createBossLaser(container, x, y) {
 }
 
 function updateBossLaser(dataTime, container) {
-    const lasers = GAME_STATE.bossLasers;
+    var lasers = GAME_STATE.bossLasers;
+    var laserPositionX = BOSS_CONFIG.BOSS_WIDTH / 1.9;
+    var laserPositionY = BOSS_CONFIG.BOSS_HEIGHT / 1.55;
 
     for (var i = 0; i < lasers.length; i++) {
         var laser = lasers[i];
@@ -336,9 +344,10 @@ function updateBossLaser(dataTime, container) {
         }
 
         setPosition(laser.element, laser.x, laser.y);
-        const r1 = laser.element.getBoundingClientRect();
-        const player = document.querySelector(".player");
-        const r2 = player.getBoundingClientRect();
+        setPosition(laser.element, laser.x - laserPositionX, laser.y + laserPositionY);
+        var r1 = laser.element.getBoundingClientRect();
+        var player = document.querySelector(".player");
+        var r2 = player.getBoundingClientRect();
         if (rectangleIntersection(r1, r2)) {
             destroyPlayer(container, player);
             destroyLaser(container, laser)
@@ -409,7 +418,7 @@ function createEnemyLaser(container, x, y) {
 }
 
 function updateEnemyLaser(dataTime, container) {
-    const lasers = GAME_STATE.enemyLasers;
+    var lasers = GAME_STATE.enemyLasers;
     for (var i = 0; i < lasers.length; i++) {
         var laser = lasers[i];
         laser.y += dataTime * LASER_CONFIG.LASER_MAX_SPEED;
@@ -417,9 +426,9 @@ function updateEnemyLaser(dataTime, container) {
             destroyLaser(container, laser);
         }
         setPosition(laser.element, laser.x, laser.y);
-        const r1 = laser.element.getBoundingClientRect();
-        const player = document.querySelector(".player");
-        const r2 = player.getBoundingClientRect();
+        var r1 = laser.element.getBoundingClientRect();
+        var player = document.querySelector(".player");
+        var r2 = player.getBoundingClientRect();
         if (rectangleIntersection(r1, r2)) {
             destroyPlayer(container, player);
             break;
@@ -443,7 +452,7 @@ function renderGame() {
     if (playerWin()) {
         document.querySelector(".congratulations").style.display = "block";
         return;
-      }
+    }
 
     var container = document.querySelector('.game');
     var boss = document.querySelector('.boss');
