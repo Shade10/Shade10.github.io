@@ -87,14 +87,14 @@ function init() {
 
 function Playbutton() {
     ctx.beginPath();
-    ctx.rect(250, 350, 800, 100); 
+    ctx.rect(150, 350, 800, 100); 
     ctx.fillStyle = '#FFFFFF'; 
     ctx.fillStyle = 'rgba(225,225,225,0.5)';
     ctx.fill(); 
     ctx.closePath();
     ctx.font = '40pt Kremlin Pro Web';
     ctx.fillStyle = '#000000';
-    ctx.fillText('Kliknij tutaj by zagrać w grę', 345, 415);
+    ctx.fillText('Kliknij tutaj by zagrać w grę', 245, 415);
   }
 
 function animate() {
@@ -135,6 +135,7 @@ canvas.addEventListener('click', function(evt) {
     var mousePos = getMousePos(canvas, evt);
 
     if (isInside(mousePos,rect)) {
+        alert('Bądź gotów zaraz rozpocznie się walka o przetrwanie poruszanie się - strzałkami i spacja ostrzał Powodzenia :)');
         window.location.href='../game.html';
     }else{
         return;
