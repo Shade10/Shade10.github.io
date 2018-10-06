@@ -152,8 +152,8 @@ function createPlayer(container) {
     var player = document.createElement("img");
     player.src = "/Game/img/spaceship.pod_.1.png";
     player.className = "player";
-    var audio = new Audio("/Game/sound/theme_melody.mp3");
-    audio.play();
+    // var audio = new Audio("/Game/sound/theme_melody.mp3");
+    // audio.play();
     container.appendChild(player);
 
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
