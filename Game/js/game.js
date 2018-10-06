@@ -46,6 +46,7 @@ var ENEMY_CONFIG = {
 var GAME_CONFIG = {
     GAME_WIDTH: 1200,
     GAME_HEIGHT: 700,
+    music: false,
 };
 
 var GAME_STATE = {
@@ -96,11 +97,17 @@ function rand(min, max) {
     return min + Math.random() * (max - min);
 }
 
+// function music(){
+//     var audio = new Audio("/Game/sound/theme_melody.mp3");
+//     audio.play();
+// };
+// music();
+
 function init() {
     var container = document.querySelector(".game");
     createPlayer(container);
-    var audio = new Audio("/Game/sound/theme_melody.mp3");
-    audio.play();
+    // var audio = new Audio("/Game/sound/theme_melody.mp3");
+    // audio.play();
 
     var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) /
         (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
@@ -145,7 +152,8 @@ function createPlayer(container) {
     var player = document.createElement("img");
     player.src = "/Game/img/spaceship.pod_.1.png";
     player.className = "player";
-
+    // var audio = new Audio("/Game/sound/theme_melody.mp3");
+    // audio.play();
     container.appendChild(player);
 
     setPosition(player, GAME_STATE.playerX, GAME_STATE.playerY);
@@ -458,6 +466,11 @@ function renderGame() {
     updateBossLaser(dataTime, container);
     updateEnemies(dataTime, container);
     updateEnemyLaser(dataTime, container);
+
+    // if (GAME_CONFIG.music === false) {
+    //     GAME_CONFIG.music = true;
+    //     music();
+    // }
 
     if (GAME_STATE.enemies <= 0) {
         doItOnce();
