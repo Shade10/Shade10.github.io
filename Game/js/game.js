@@ -374,6 +374,8 @@ function createEnemy(container, x, y) {
 
 function destroyEnemy(container, enemy) {
     container.removeChild(enemy.element);
+    var audio = new Audio("/Game/sound/coin_melody.mp3");
+    audio.play();
     enemy.isDead = true;
 }
 
