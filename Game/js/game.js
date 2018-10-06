@@ -99,6 +99,8 @@ function rand(min, max) {
 function init() {
     var container = document.querySelector(".game");
     createPlayer(container);
+    var audio = new Audio("/Game/sound/theme_melody.mp3");
+    audio.play();
 
     var enemySpacing = (GAME_CONFIG.GAME_WIDTH - ENEMY_CONFIG.ENEMY_HORIZONTAL_PADDING * 2) /
         (ENEMY_CONFIG.ENEMY_PER_ROW - 1);
@@ -111,7 +113,6 @@ function init() {
             createEnemy(container, x, y);
         }
     }
-
 };
 init();
 
