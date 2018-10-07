@@ -23,6 +23,7 @@ body{
     "aside aside main main main main main main main main main main"
     "aside aside main main main main main main main main main main"
     "menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore"
+    "formGame formGame formGame formGame formGame formGame formGame formGame formGame formGame formGame formGame"
     "footer footer footer footer footer footer footer footer footer footer footer footer"; 
 }
 
@@ -156,6 +157,22 @@ p.ballBlack{
     border-radius: 50%;
 }
 
+.formGame{
+    grid-area: formGame;
+    background-color: #554947;
+}
+
+.formGame canvas{
+    border: 1px solid black;
+    width: 100%;
+    height: 100%;
+}
+
+.game{
+    width: 100px;
+    height: 100px;
+}
+
 footer{
     grid-area: footer;
     background-color: #554947;
@@ -180,6 +197,7 @@ footer div{
         "aside aside main main main main main main main main main main"
         "aside aside main main main main main main main main main main"
         "menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore"
+        "formGame formGame formGame formGame formGame formGame formGame formGame formGame formGame formGame formGame"
         "footer footer footer footer footer footer footer footer footer footer footer footer"; 
     }
 
@@ -220,7 +238,8 @@ footer div{
         "header header header header section section section section"
         "aside aside aside aside aside aside aside aside"
         "main main main main main main main main"
-        "menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore  "
+        "menuMore menuMore menuMore menuMore menuMore menuMore menuMore menuMore"
+        "formGame formGame formGame formGame formGame formGame formGame formGame"
         "footer footer footer footer footer footer footer footer"; 
     }
 
@@ -263,6 +282,7 @@ footer div{
         "aside aside aside aside aside"
         "main main main main main"
         "menuMore menuMore menuMore menuMore menuMore"
+        "formGame formGame formGame formGame formGame"
         "footer footer footer footer footer"; 
     }
 
@@ -307,6 +327,7 @@ footer div{
         "aside aside aside aside aside"
         "main main main main main"
         "menuMore menuMore menuMore menuMore menuMore"
+        "formGame formGame formGame formGame formGame"
         "footer footer footer footer footer"; 
     }
 
