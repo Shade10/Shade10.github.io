@@ -45,14 +45,13 @@ p b {
   font-size: 27px;
 }
 
-
-
 nav {
   grid-area: nav;
   background-color: #0b191c;
   align-self: center;
   position: fixed;
   width: 100%;
+  z-index: 100;
 }
 
 nav ul {
@@ -98,22 +97,56 @@ header p {
 
 main {
   grid-area: main;
-  background-color: #554947;
+  background-color: #46403f;
+  position: relative;
+  overflow: hidden;
+  color: #A8BE30;
 }
 
+main:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.1;
+  background-image: url(/img/impact_of_dementia-1024x724.png);
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  -ms-background-size: cover;
+  -o-background-size: cover;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+}
+main p{
+  font-size: 23px;
+  padding-top: 50px;
+  margin: 0 100px;
+}
+main p.dataWork{
+  color: #20F1CB
+}
+main p:last-child{
+  margin-bottom: 40px;
+}
 main div {
   border-bottom: none;
 }
 
 main h1:first-of-type {
+  color: #20F1CB;
   margin-bottom: 0;
+  border-bottom: none
 }
 
 main p.lineBorder {
   border-bottom: 3px solid blue;
   padding: 15px 30px 45px 30px;
 }
-
 
 aside {
   grid-area: aside;
@@ -149,7 +182,7 @@ aside .panel {
   background-color: rgb(76, 129, 120);
   overflow: hidden;
   border-bottom: none;
-  display: none
+  display: none;
 }
 
 aside .skillSet {
@@ -171,7 +204,7 @@ aside .language {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  border-bottom: none
+  border-bottom: none;
 }
 
 aside .language .skillLang {
@@ -186,35 +219,40 @@ section {
   background-color: #000000b0;
   overflow: hidden;
 }
-
-
-section:before {
-    content: ' ';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    opacity: 0.2;
-    background-image: url(/img/programing.jpg);
-    background-repeat: no-repeat;
-    background-position: 50% 0;
-    -ms-background-size: cover;
-    -o-background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-    background-size: cover;
+section a {
+  z-index: 2;
+  position: relative;
 }
 
-
-
+section:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.2;
+  background-image: url(/img/programing.jpg);
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  -ms-background-size: cover;
+  -o-background-size: cover;
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+}
 
 section p {
   padding: 7px;
   font-size: 24px;
-  color: #5F40B2
+  color: #8e28cd;
+}
+
+section h2 {
+  font-size: 28px;
+  color: #4069ff;
 }
 
 p.ballBlue {
@@ -251,7 +289,7 @@ p.ballBlack {
 
 footer {
   grid-area: footer;
-  background-color: #554947;
+  background-color: #44201a;
   display: flex;
   justify-content: space-around;
 }
