@@ -45,6 +45,14 @@ p b {
   font-size: 27px;
 }
 
+#projects a.project_links a{
+  padding-top: 20px;
+}
+
+.project_theme{
+  color: red
+}
+
 nav {
   grid-area: nav;
   background-color: #0b191c;
